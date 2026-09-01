@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Paris · Madrid · Amsterdam — 2027 — Budget</title>
+    <meta name="description" content="Paris · Madrid · Amsterdam — 2027">
+    <style>
+        :root{--brand:#22535f;--dark:#22535f;--accent:#00a3a6;--ink:#111827;--muted:#64748b;
+        --line:#d7dde8;--soft-line:#edf1f6;--paper:#fff;--page:#f4f7fb;--section:#f8fafc;
+        --saving:#087f5b}
+        *{box-sizing:border-box}
+        body{margin:0;background:var(--page);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.45}
+        .page{width:min(1180px,calc(100% - 32px));margin:24px auto 48px;background:var(--paper);
+        border:1px solid var(--line);border-radius:24px;box-shadow:0 20px 50px rgba(12,35,64,.12);overflow:hidden}
+        header{background:linear-gradient(135deg,var(--dark),var(--brand));color:#fff;padding:34px 40px 30px;
+        border-bottom:5px solid var(--accent)}
+        .brand-row{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:22px}
+        .brand{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+        .case-label{text-align:right;font-size:13px;font-weight:700;color:rgba(255,255,255,.78)}
+        h1{margin:0;max-width:920px;font-size:clamp(24px,3.2vw,40px);line-height:1.05;
+        color:rgba(255,255,255,.82);font-weight:800}
+        /* le nom de la proposition distingue les pages entre elles : il doit sauter aux yeux */
+        .proposal-name{display:inline-block;margin-top:14px;padding:9px 18px;border-radius:999px;
+        background:#fff;color:var(--dark);font-size:clamp(18px,2.1vw,26px);font-weight:900;line-height:1.1}
+        main{padding:34px 40px 40px}
+        .summary{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:28px}
+        @media(min-width:921px){.summary{grid-template-columns:repeat(2,minmax(240px,1fr))}}
+        .metric{border:1px solid var(--line);background:var(--section);border-radius:18px;padding:20px;
+        min-height:132px;display:grid;grid-template-rows:auto 1fr auto;gap:12px}
+        .metric.primary{background:var(--dark);color:#fff;border-color:var(--dark)}
+        .metric-label{margin:0;color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+        .metric.primary .metric-label{color:rgba(255,255,255,.7)}
+        .metric-value{font-size:clamp(22px,2.4vw,32px);line-height:1;font-weight:900;align-self:end}
+        .metric-note{min-height:31px;color:var(--muted);font-size:12px;font-weight:700}
+        .metric.primary .metric-note{color:rgba(255,255,255,.75)}
+        .distribution{grid-column:1/-1;border:1px solid var(--line);background:#fff;border-radius:18px;padding:18px 20px}
+        .distribution-head{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin-bottom:14px}
+        .distribution-title{margin:0;color:var(--dark);font-size:13px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+        .distribution-total{color:var(--muted);font-size:12px;font-weight:800;white-space:nowrap}
+        .stacked-bar{display:flex;height:16px;border-radius:999px;overflow:hidden;background:var(--soft-line);
+        box-shadow:inset 0 0 0 1px rgba(12,35,64,.08)}
+        .stacked-bar span{display:block;min-width:3px}
+        .distribution-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}
+        .legend-item{border:1px solid var(--soft-line);border-radius:14px;padding:10px;background:var(--section)}
+        .legend-label{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:10px;font-weight:900;
+        letter-spacing:.04em;text-transform:uppercase}
+        .legend-dot{width:9px;height:9px;border-radius:999px;flex:0 0 auto}
+        .legend-value{display:block;margin-top:7px;color:var(--ink);font-size:15px;font-weight:900;font-variant-numeric:tabular-nums}
+        .legend-percent{color:var(--muted);font-size:11px;font-weight:800}
+        section{margin-top:26px;border:1px solid var(--line);background:#fff;border-radius:18px;overflow:hidden}
+        .section-title{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:16px 18px;
+        background:var(--section);border-bottom:1px solid var(--line)}
+        h2{margin:0;color:var(--dark);font-size:18px;line-height:1.2}
+        .section-total{white-space:nowrap;color:var(--dark);font-size:16px;font-weight:900}
+        .section-note{margin:0;padding:10px 18px;color:var(--muted);font-size:11px;font-weight:600;
+        background:#fff;border-bottom:1px solid var(--soft-line)}
+        .table-wrap{overflow-x:auto}
+        table{width:100%;border-collapse:collapse;font-size:13px}
+        th{background:#fff;color:var(--muted);font-size:11px;letter-spacing:.04em;text-align:left;text-transform:uppercase;
+        border-bottom:1px solid var(--line);padding:11px 12px;white-space:nowrap}
+        td{border-bottom:1px solid var(--soft-line);padding:11px 12px;vertical-align:top}
+        tbody tr:last-child td{border-bottom:0}
+        .num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+        .center{text-align:center;white-space:nowrap}
+        .label{font-weight:700}
+        .cell-sub{display:block;color:var(--muted);font-size:11px;font-weight:600;margin-top:4px;line-height:1.35}
+        .subtotal td,.total-ht td,.total-ttc td,tr.sec-tva td,tr.sec-ttc td{font-weight:900}
+        .subtotal td{background:#eef5ff;color:var(--dark)}
+        tr.sec-tva td{background:#eef5ff;color:var(--dark)}
+        tr.sec-ttc td{background:var(--brand);color:#fff}
+        .total-ht td{background:var(--dark);color:#fff}
+        .total-ttc td{background:var(--brand);color:#fff;font-size:15px}
+        .option-tag{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;background:#fff7ed;
+        color:#b45309;font-size:10px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;vertical-align:middle}
+        .row-option td{background:#fffdf8}
+        footer{display:flex;justify-content:space-between;gap:18px;margin-top:28px;padding:22px 0 0;
+        border-top:1px solid var(--line);color:var(--muted);font-size:12px;font-weight:700}
+        /* nav */
+        .topnav{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;align-items:center;
+        justify-content:space-between;gap:16px;padding:14px 22px;background:#fff;border-bottom:1px solid var(--line)}
+        .topnav-brand-block{display:flex;flex-direction:column;gap:2px}
+        .topnav-brand-title{font-size:19px;font-weight:900;color:var(--dark)}
+        .topnav-tabs{display:flex;flex-wrap:wrap;gap:6px}
+        .topnav-tabs a{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:10px;font-size:13px;
+        font-weight:800;color:var(--muted);text-decoration:none;border:1px solid var(--line);background:#fff;transition:all .15s ease}
+        .topnav-tabs a:hover{color:var(--dark);background:var(--section)}
+        .topnav-tabs a.active{color:#fff;background:var(--dark);border-color:var(--dark)}
+        .topnav-tabs svg{flex:0 0 auto}
+        /* comparison */
+        .cmp-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:26px}
+        .cmp-card{border:1px solid var(--line);border-radius:18px;padding:22px;background:var(--section)}
+        .cmp-card h3{margin:0 0 16px;color:var(--dark);font-size:16px;line-height:1.25}
+        .cmp-card-label{margin:0;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+        .cmp-card-value{font-size:29px;font-weight:900;color:var(--ink);margin:6px 0 5px}
+        .cmp-card-per{color:var(--muted);font-size:12px;font-weight:700}
+        .cmp-card-ht{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:14px}
+        .cmp-card-ttc{color:var(--ink);font-size:14px;font-weight:800;margin-bottom:4px}
+        .cmp-bars{display:flex;flex-direction:column;gap:20px;padding:20px}
+        .cmp-bar-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:9px;
+        font-size:13px;font-weight:800;color:var(--dark)}
+        .cmp-bar-head .r{color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+        .cmp-bar-head .r small{color:var(--muted);font-weight:600}
+        .cmp-bar{display:flex;height:20px;border-radius:999px;overflow:hidden;background:var(--soft-line);
+        box-shadow:inset 0 0 0 1px rgba(12,35,64,.06)}
+        .cmp-bar span{display:block}
+        .cmp-legend{display:flex;flex-wrap:wrap;gap:16px;padding:0 20px 20px}
+        .cmp-table{width:100%;border-collapse:collapse;font-size:13px}
+        .cmp-table th{color:var(--muted);font-size:11px;letter-spacing:.04em;text-transform:uppercase;
+        border-bottom:1px solid var(--line);padding:14px;white-space:nowrap;text-align:right}
+        .cmp-table th:first-child{text-align:left}
+        .cmp-table td{border-bottom:1px solid var(--soft-line);padding:14px;text-align:right;
+        font-variant-numeric:tabular-nums;white-space:nowrap}
+        .cmp-table td:first-child{text-align:left;font-weight:700;color:var(--ink)}
+        /* doit passer après td:first-child, sinon le libellé reste foncé sur le fond foncé */
+        .cmp-table tr.total-ht td{background:var(--dark);color:#fff;font-weight:900}
+        .cmp-min{color:var(--saving);font-weight:900}
+        .cmp-dot{display:inline-block;width:9px;height:9px;border-radius:999px;margin-right:8px;vertical-align:middle}
+        .cmp-table tr.total-ht td.cmp-min{color:#8be9c0}
+        .cmp-table tr.cmp-ttc td{color:var(--brand);font-weight:900;background:#fff}
+        .cmp-note{padding:0 20px 20px;color:var(--muted);font-size:12px;font-weight:600}
+        @media(max-width:920px){.page{width:100%;margin:0;border-left:0;border-right:0}
+        header,main{padding-left:22px;padding-right:22px}.brand-row,footer{flex-direction:column}
+        .case-label{text-align:left}}
+        @media print{.topnav{display:none!important}body{background:#fff}
+        .page{width:100%;margin:0;border:0;box-shadow:none}header{padding-top:24px}main{padding-bottom:0}
+        section{break-inside:avoid}}
+
+        .intro{margin:0 0 22px;color:var(--muted);font-size:14px;font-weight:700}
+        .topnav-total{display:flex;align-items:baseline;gap:10px;white-space:nowrap}
+        .topnav-total-label{color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+        .topnav-total-value{color:var(--dark);font-size:20px;font-weight:900;font-variant-numeric:tabular-nums}
+        /* cartes de choix : c'est le seul endroit cliquable, il doit se voir au premier coup d'oeil */
+        .picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;padding:18px 18px 4px}
+        .pick{position:relative;display:block;cursor:pointer;border:2px solid var(--line);border-radius:18px;
+        padding:18px 18px 18px 46px;background:var(--section);transition:border-color .15s ease,background .15s ease}
+        .pick:hover{border-color:var(--accent)}
+        .pick input{position:absolute;opacity:0;pointer-events:none}
+        .pick-dot{position:absolute;top:20px;left:17px;width:18px;height:18px;border-radius:999px;
+        border:2px solid var(--line);background:#fff}
+        .pick-dot::after{content:"";position:absolute;inset:3px;border-radius:999px;background:var(--dark);
+        transform:scale(0);transition:transform .12s ease}
+        .pick h3{margin:0 0 12px;color:var(--dark);font-size:15px;line-height:1.25}
+        .pick-label{margin:0;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+        .pick-value{font-size:25px;font-weight:900;color:var(--ink);margin:5px 0 4px;font-variant-numeric:tabular-nums}
+        .pick-ttc{color:var(--muted);font-size:12px;font-weight:800;font-variant-numeric:tabular-nums}
+        .pick.is-on{border-color:var(--dark);background:#fff;box-shadow:0 8px 22px rgba(34,83,95,.14)}
+        .pick.is-on .pick-dot{border-color:var(--dark)}
+        .pick.is-on .pick-dot::after{transform:scale(1)}
+        .pick-tag{display:none;margin-top:12px;padding:4px 10px;border-radius:999px;background:var(--dark);
+        color:#fff;font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+        .pick.is-on .pick-tag{display:inline-block}
+        .pick input:focus-visible ~ .pick-dot{outline:3px solid var(--accent);outline-offset:2px}
+        /* colonne retenue mise en avant dans le tableau de comparaison */
+        .cmp-table th.is-on,.cmp-table td.is-on{background:#eef5ff}
+        .cmp-table tr.total-ht td.is-on{background:#123f49}
+        .cmp-table tr.cmp-ttc td.is-on{background:#eef5ff}
+        .cmp-table th.is-on{color:var(--dark)}
+        .recap-city td:first-child span{display:block;color:var(--muted);font-size:11px;font-weight:700;margin-top:3px}
+        @media print{.pick:not(.is-on){display:none}.picks{padding-bottom:0}
+        .cmp-table th:not(.is-on):not(:first-child),.cmp-table td:not(.is-on):not(:first-child){display:none}}
+    </style>
+</head>
+
+<body>
+    <nav class="topnav" aria-label="Navigation">
+        <div class="topnav-brand-block"><span class="topnav-brand-title">Paris · Madrid · Amsterdam — 2027</span></div>
+        <div class="topnav-tabs">
+            <a href="#paris"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/></svg>Paris</a><a href="#madrid"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/></svg>Madrid</a><a href="#amsterdam"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/></svg>Amsterdam</a>
+        </div>
+        <div class="topnav-total">
+            <span class="topnav-total-label">Total HT</span>
+            <span class="topnav-total-value" id="nav-total">—</span>
+        </div>
+    </nav>
+    <div class="page">
+        <header>
+            <div class="brand-row">
+                <div class="brand">WEEVUP — DEVIS</div>
+            </div>
+            <h1>Paris · Madrid · Amsterdam — 2027</h1>
+            <div class="proposal-name">Budget interactif</div>
+        </header>
+        <main>
+            <p class="intro">Sélectionnez un lieu par ville : les totaux se mettent à jour automatiquement.</p>
+            <div class="summary">
+                <div class="metric primary">
+                    <p class="metric-label">TOTAL HT</p>
+                    <div class="metric-value" id="k-ht">—</div>
+                    <div class="metric-note" id="k-ht-note">3 villes</div>
+                </div>
+                <div class="metric">
+                    <p class="metric-label">TOTAL TTC</p>
+                    <div class="metric-value" id="k-ttc">—</div>
+                    <div class="metric-note" id="k-tva">—</div>
+                </div>
+                <div class="distribution">
+                    <div class="distribution-head">
+                        <p class="distribution-title">Répartition des postes</p>
+                        <span class="distribution-total" id="k-bar-total">—</span>
+                    </div>
+                    <div class="stacked-bar" id="k-bar"></div>
+                    <div class="distribution-legend" id="k-legend"></div>
+                </div>
+            </div>
+
+            <section id="paris">
+                <div class="section-title">
+                    <h2>Paris — mars 2027</h2>
+                    <div class="section-total" data-total="paris">—</div>
+                </div>
+                <div class="picks">
+                    <label class="pick" data-city="paris" data-i="0">
+                        <input type="radio" name="paris" value="0" checked>
+                        <span class="pick-dot" aria-hidden="true"></span>
+                        <h3>Espace Saint Martin</h3>
+                        <p class="pick-label">Budget total HT</p>
+                        <div class="pick-value">86 040,13 €</div>
+                        <div class="pick-ttc">Total TTC : 103 248,16 €</div>
+                        <span class="pick-tag">Retenu</span>
+                    </label>
+                    <label class="pick" data-city="paris" data-i="1">
+                        <input type="radio" name="paris" value="1">
+                        <span class="pick-dot" aria-hidden="true"></span>
+                        <h3>Comet Bourse</h3>
+                        <p class="pick-label">Budget total HT</p>
+                        <div class="pick-value">97 853,91 €</div>
+                        <div class="pick-ttc">Total TTC : 117 424,69 €</div>
+                        <span class="pick-tag">Retenu</span>
+                    </label>
+                    <label class="pick" data-city="paris" data-i="2">
+                        <input type="radio" name="paris" value="2">
+                        <span class="pick-dot" aria-hidden="true"></span>
+                        <h3>Salons Hoche</h3>
+                        <p class="pick-label">Budget total HT</p>
+                        <div class="pick-value">105 694,93 €</div>
+                        <div class="pick-ttc">Total TTC : 126 833,92 €</div>
+                        <span class="pick-tag">Retenu</span>
+                    </label>
+                </div>
+                <div class="table-wrap"><table class="cmp-table">
+                    <thead><tr><th>Poste de dépense (HT)</th><th data-city="paris" data-i="0">Espace Saint Martin</th><th data-city="paris" data-i="1">Comet Bourse</th><th data-city="paris" data-i="2">Salons Hoche</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="cmp-dot" style="background:#22535f"></span>Lieu</td><td data-city="paris" data-i="0" class="cmp-min">25 068,00 €</td><td data-city="paris" data-i="1">41 148,80 €</td><td data-city="paris" data-i="2">55 536,00 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#00a3a6"></span>Restauration</td><td data-city="paris" data-i="0">41 016,00 €</td><td data-city="paris" data-i="1">35 675,00 €</td><td data-city="paris" data-i="2" class="cmp-min">28 416,00 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#f59e0b"></span>Badges &amp; signalétique</td><td data-city="paris" data-i="0">533,30 €</td><td data-city="paris" data-i="1">533,30 €</td><td data-city="paris" data-i="2">533,30 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#7c3aed"></span>Animations</td><td data-city="paris" data-i="0">5 268,00 €</td><td data-city="paris" data-i="1">5 268,00 €</td><td data-city="paris" data-i="2">5 268,00 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#0ea5e9"></span>Accompagnement Weevup</td><td data-city="paris" data-i="0">6 333,00 €</td><td data-city="paris" data-i="1">6 333,00 €</td><td data-city="paris" data-i="2">6 333,00 €</td></tr>
+                        <tr><td>Honoraires agence<span class="cell-sub">10% du sous-total</span></td><td data-city="paris" data-i="0">7 821,83 €</td><td data-city="paris" data-i="1">8 895,81 €</td><td data-city="paris" data-i="2">9 608,63 €</td></tr>
+                        <tr class="total-ht"><td>TOTAL HT</td><td data-city="paris" data-i="0" class="cmp-min">86 040,13 €</td><td data-city="paris" data-i="1">97 853,91 €</td><td data-city="paris" data-i="2">105 694,93 €</td></tr>
+                        <tr class="cmp-ttc"><td>Total TTC</td><td data-city="paris" data-i="0">103 248,16 €</td><td data-city="paris" data-i="1">117 424,69 €</td><td data-city="paris" data-i="2">126 833,92 €</td></tr>
+                    </tbody>
+                </table></div>
+            </section>
+            <section id="madrid">
+                <div class="section-title">
+                    <h2>Madrid — mai 2027</h2>
+                    <div class="section-total" data-total="madrid">—</div>
+                </div>
+                <div class="picks">
+                    <label class="pick" data-city="madrid" data-i="0">
+                        <input type="radio" name="madrid" value="0" checked>
+                        <span class="pick-dot" aria-hidden="true"></span>
+                        <h3>NH Madrid Ventas</h3>
+                        <p class="pick-label">Budget total HT</p>
+                        <div class="pick-value">40 942,34 €</div>
+                        <div class="pick-ttc">Total TTC : 49 130,81 €</div>
+                        <span class="pick-tag">Retenu</span>
+                    </label>
+                    <label class="pick" data-city="madrid" data-i="1">
+                        <input type="radio" name="madrid" value="1">
+                        <span class="pick-dot" aria-hidden="true"></span>
+                        <h3>Comet Retiro</h3>
+                        <p class="pick-label">Budget total HT</p>
+                        <div class="pick-value">49 596,15 €</div>
+                        <div class="pick-ttc">Total TTC : 59 515,38 €</div>
+                        <span class="pick-tag">Retenu</span>
+                    </label>
+                    <label class="pick" data-city="madrid" data-i="2">
+                        <input type="radio" name="madrid" value="2">
+                        <span class="pick-dot" aria-hidden="true"></span>
+                        <h3>Meeting Place Orense 34</h3>
+                        <p class="pick-label">Budget total HT</p>
+                        <div class="pick-value">50 733,17 €</div>
+                        <div class="pick-ttc">Total TTC : 60 879,80 €</div>
+                        <span class="pick-tag">Retenu</span>
+                    </label>
+                </div>
+                <div class="table-wrap"><table class="cmp-table">
+                    <thead><tr><th>Poste de dépense (HT)</th><th data-city="madrid" data-i="0">NH Madrid Ventas</th><th data-city="madrid" data-i="1">Comet Retiro</th><th data-city="madrid" data-i="2">Meeting Place Orense 34</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="cmp-dot" style="background:#22535f"></span>Lieu</td><td data-city="madrid" data-i="0" class="cmp-min">9 914,15 €</td><td data-city="madrid" data-i="1">17 451,25 €</td><td data-city="madrid" data-i="2">15 566,20 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#00a3a6"></span>Restauration</td><td data-city="madrid" data-i="0" class="cmp-min">17 610,00 €</td><td data-city="madrid" data-i="1">17 940,00 €</td><td data-city="madrid" data-i="2">20 858,70 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#f59e0b"></span>Badges &amp; signalétique</td><td data-city="madrid" data-i="0">413,16 €</td><td data-city="madrid" data-i="1">413,16 €</td><td data-city="madrid" data-i="2">413,16 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#7c3aed"></span>Animations</td><td data-city="madrid" data-i="0">2 700,00 €</td><td data-city="madrid" data-i="1">2 700,00 €</td><td data-city="madrid" data-i="2">2 700,00 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#0ea5e9"></span>Accompagnement Weevup</td><td data-city="madrid" data-i="0">6 583,00 €</td><td data-city="madrid" data-i="1">6 583,00 €</td><td data-city="madrid" data-i="2">6 583,00 €</td></tr>
+                        <tr><td>Honoraires agence<span class="cell-sub">10% du sous-total</span></td><td data-city="madrid" data-i="0">3 722,03 €</td><td data-city="madrid" data-i="1">4 508,74 €</td><td data-city="madrid" data-i="2">4 612,11 €</td></tr>
+                        <tr class="total-ht"><td>TOTAL HT</td><td data-city="madrid" data-i="0" class="cmp-min">40 942,34 €</td><td data-city="madrid" data-i="1">49 596,15 €</td><td data-city="madrid" data-i="2">50 733,17 €</td></tr>
+                        <tr class="cmp-ttc"><td>Total TTC</td><td data-city="madrid" data-i="0">49 130,81 €</td><td data-city="madrid" data-i="1">59 515,38 €</td><td data-city="madrid" data-i="2">60 879,80 €</td></tr>
+                    </tbody>
+                </table></div>
+            </section>
+            <section id="amsterdam">
+                <div class="section-title">
+                    <h2>Amsterdam — juin 2027</h2>
+                    <div class="section-total" data-total="amsterdam">—</div>
+                </div>
+                <div class="picks">
+                    <label class="pick" data-city="amsterdam" data-i="0">
+                        <input type="radio" name="amsterdam" value="0" checked>
+                        <span class="pick-dot" aria-hidden="true"></span>
+                        <h3>A Beautiful Mess</h3>
+                        <p class="pick-label">Budget total HT</p>
+                        <div class="pick-value">37 810,51 €</div>
+                        <div class="pick-ttc">Total TTC : 45 372,61 €</div>
+                        <span class="pick-tag">Retenu</span>
+                    </label>
+                    <label class="pick" data-city="amsterdam" data-i="1">
+                        <input type="radio" name="amsterdam" value="1">
+                        <span class="pick-dot" aria-hidden="true"></span>
+                        <h3>Nhow Amsterdam RAI</h3>
+                        <p class="pick-label">Budget total HT</p>
+                        <div class="pick-value">40 225,50 €</div>
+                        <div class="pick-ttc">Total TTC : 48 270,59 €</div>
+                        <span class="pick-tag">Retenu</span>
+                    </label>
+                    <label class="pick" data-city="amsterdam" data-i="2">
+                        <input type="radio" name="amsterdam" value="2">
+                        <span class="pick-dot" aria-hidden="true"></span>
+                        <h3>Venue Collective</h3>
+                        <p class="pick-label">Budget total HT</p>
+                        <div class="pick-value">48 928,09 €</div>
+                        <div class="pick-ttc">Total TTC : 58 713,71 €</div>
+                        <span class="pick-tag">Retenu</span>
+                    </label>
+                </div>
+                <div class="table-wrap"><table class="cmp-table">
+                    <thead><tr><th>Poste de dépense (HT)</th><th data-city="amsterdam" data-i="0">A Beautiful Mess</th><th data-city="amsterdam" data-i="1">Nhow Amsterdam RAI</th><th data-city="amsterdam" data-i="2">Venue Collective</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="cmp-dot" style="background:#22535f"></span>Lieu</td><td data-city="amsterdam" data-i="0" class="cmp-min">12 900,00 €</td><td data-city="amsterdam" data-i="1">18 548,73 €</td><td data-city="amsterdam" data-i="2">24 469,00 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#00a3a6"></span>Restauration</td><td data-city="amsterdam" data-i="0">13 892,00 €</td><td data-city="amsterdam" data-i="1" class="cmp-min">8 391,00 €</td><td data-city="amsterdam" data-i="2">11 616,00 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#f59e0b"></span>Badges &amp; signalétique</td><td data-city="amsterdam" data-i="0">348,19 €</td><td data-city="amsterdam" data-i="1" class="cmp-min">348,00 €</td><td data-city="amsterdam" data-i="2" class="cmp-min">348,00 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#7c3aed"></span>Animations</td><td data-city="amsterdam" data-i="0" class="cmp-min">2 400,00 €</td><td data-city="amsterdam" data-i="1">4 447,90 €</td><td data-city="amsterdam" data-i="2">3 214,08 €</td></tr>
+                        <tr><td><span class="cmp-dot" style="background:#0ea5e9"></span>Accompagnement Weevup</td><td data-city="amsterdam" data-i="0">4 833,00 €</td><td data-city="amsterdam" data-i="1">4 833,00 €</td><td data-city="amsterdam" data-i="2">4 833,00 €</td></tr>
+                        <tr><td>Honoraires agence<span class="cell-sub">10% du sous-total</span></td><td data-city="amsterdam" data-i="0">3 437,32 €</td><td data-city="amsterdam" data-i="1">3 656,86 €</td><td data-city="amsterdam" data-i="2">4 448,01 €</td></tr>
+                        <tr class="total-ht"><td>TOTAL HT</td><td data-city="amsterdam" data-i="0" class="cmp-min">37 810,51 €</td><td data-city="amsterdam" data-i="1">40 225,50 €</td><td data-city="amsterdam" data-i="2">48 928,09 €</td></tr>
+                        <tr class="cmp-ttc"><td>Total TTC</td><td data-city="amsterdam" data-i="0">45 372,61 €</td><td data-city="amsterdam" data-i="1">48 270,59 €</td><td data-city="amsterdam" data-i="2">58 713,71 €</td></tr>
+                    </tbody>
+                </table></div>
+            </section>
+
+            <section>
+                <div class="section-title"><h2>Récapitulatif Financier</h2>
+                    <div class="section-total" id="r-ttc">—</div>
+                </div>
+                <div class="table-wrap"><table>
+                    <tbody>
+                        <tr class="recap-city"><td class="label">Paris<span data-pick="paris">—</span></td><td class="num" data-sous="paris">—</td></tr>
+                        <tr class="recap-city"><td class="label">Madrid<span data-pick="madrid">—</span></td><td class="num" data-sous="madrid">—</td></tr>
+                        <tr class="recap-city"><td class="label">Amsterdam<span data-pick="amsterdam">—</span></td><td class="num" data-sous="amsterdam">—</td></tr>
+                        <tr class="subtotal"><td>Sous-total HT</td><td class="num" id="r-sous">—</td></tr>
+                        <tr><td class="label">Honoraires HT<span class="cell-sub">10% du sous-total</span></td>
+                            <td class="num" id="r-hon">—</td></tr>
+                        <tr class="total-ht"><td>TOTAL HT</td><td class="num" id="r-ht">—</td></tr>
+                        <tr><td class="label">Total TVA</td><td class="num" id="r-tva">—</td></tr>
+                        <tr class="total-ttc"><td>TOTAL TTC</td><td class="num" id="r-ttcb">—</td></tr>
+                    </tbody></table></div>
+                <p class="cmp-note">Les options ne sont pas incluses dans les totaux.</p>
+            </section>
+
+            <div class="cmp-legend"><span class="legend-label"><span class="cmp-dot" style="background:#22535f"></span>Lieu</span><span class="legend-label"><span class="cmp-dot" style="background:#00a3a6"></span>Restauration</span><span class="legend-label"><span class="cmp-dot" style="background:#f59e0b"></span>Badges &amp; signalétique</span><span class="legend-label"><span class="cmp-dot" style="background:#7c3aed"></span>Animations</span><span class="legend-label"><span class="cmp-dot" style="background:#0ea5e9"></span>Accompagnement Weevup</span></div>
+
+            <footer><span>WEEVUP — DEVIS</span><span>Paris · Madrid · Amsterdam — 2027</span></footer>
+        </main>
+    </div>
+    <script>
+    var D = {"cities":[{"key":"paris","city":"Paris — mars 2027","props":[{"name":"Espace Saint Martin","cats":{"Lieu":25068.0,"Restauration":41016.0,"Badges & signalétique":533.3,"Animations":5268.0,"Accompagnement Weevup":6333.0},"sous":78218.3,"hon":7821.83,"ht":86040.13,"tva":17208.03,"ttc":103248.16},{"name":"Comet Bourse","cats":{"Lieu":41148.8,"Restauration":35675.0,"Badges & signalétique":533.3,"Animations":5268.0,"Accompagnement Weevup":6333.0},"sous":88958.1,"hon":8895.81,"ht":97853.91,"tva":19570.78,"ttc":117424.69},{"name":"Salons Hoche","cats":{"Lieu":55536.0,"Restauration":28416.0,"Badges & signalétique":533.3,"Animations":5268.0,"Accompagnement Weevup":6333.0},"sous":96086.3,"hon":9608.63,"ht":105694.93,"tva":21138.99,"ttc":126833.92}]},{"key":"madrid","city":"Madrid — mai 2027","props":[{"name":"NH Madrid Ventas","cats":{"Lieu":9914.15,"Restauration":17610.0,"Badges & signalétique":413.16,"Animations":2700.0,"Accompagnement Weevup":6583.0},"sous":37220.31,"hon":3722.03,"ht":40942.34,"tva":8188.47,"ttc":49130.81},{"name":"Comet Retiro","cats":{"Lieu":17451.25,"Restauration":17940.0,"Badges & signalétique":413.16,"Animations":2700.0,"Accompagnement Weevup":6583.0},"sous":45087.41,"hon":4508.74,"ht":49596.15,"tva":9919.23,"ttc":59515.38},{"name":"Meeting Place Orense 34","cats":{"Lieu":15566.2,"Restauration":20858.7,"Badges & signalétique":413.16,"Animations":2700.0,"Accompagnement Weevup":6583.0},"sous":46121.06,"hon":4612.11,"ht":50733.17,"tva":10146.63,"ttc":60879.8}]},{"key":"amsterdam","city":"Amsterdam — juin 2027","props":[{"name":"A Beautiful Mess","cats":{"Lieu":12900.0,"Restauration":13892.0,"Badges & signalétique":348.19,"Animations":2400.0,"Accompagnement Weevup":4833.0},"sous":34373.19,"hon":3437.32,"ht":37810.51,"tva":7562.1,"ttc":45372.61},{"name":"Nhow Amsterdam RAI","cats":{"Lieu":18548.73,"Restauration":8391.0,"Badges & signalétique":348.0,"Animations":4447.9,"Accompagnement Weevup":4833.0},"sous":36568.64,"hon":3656.86,"ht":40225.5,"tva":8045.09,"ttc":48270.59},{"name":"Venue Collective","cats":{"Lieu":24469.0,"Restauration":11616.0,"Badges & signalétique":348.0,"Animations":3214.08,"Accompagnement Weevup":4833.0},"sous":44480.08,"hon":4448.01,"ht":48928.09,"tva":9785.62,"ttc":58713.71}]}],"colors":{"Lieu":"#22535f","Restauration":"#00a3a6","Badges & signalétique":"#f59e0b","Animations":"#7c3aed","Accompagnement Weevup":"#0ea5e9"},"cats":["Lieu","Restauration","Badges & signalétique","Animations","Accompagnement Weevup"]};
+    function fmt(v) {
+        return v.toLocaleString('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' \u20ac';
+    }
+    function sel(key) {
+        var el = document.querySelector('input[name="' + key + '"]:checked');
+        return el ? parseInt(el.value, 10) : 0;
+    }
+    function render() {
+        var sous = 0, hon = 0, ht = 0, tva = 0, ttc = 0, byCat = {};
+        D.cities.forEach(function (c) {
+            var p = c.props[sel(c.key)];
+            sous += p.sous; hon += p.hon; ht += p.ht; tva += p.tva; ttc += p.ttc;
+            Object.keys(p.cats).forEach(function (k) { byCat[k] = (byCat[k] || 0) + p.cats[k]; });
+
+            document.querySelector('[data-total="' + c.key + '"]').textContent = fmt(p.ht);
+            document.querySelector('[data-pick="' + c.key + '"]').textContent = p.name;
+            document.querySelector('[data-sous="' + c.key + '"]').textContent = fmt(p.sous);
+
+            // colonne retenue : cartes + colonne du tableau
+            c.props.forEach(function (_, i) {
+                var on = (i === sel(c.key));
+                document.querySelectorAll('[data-city="' + c.key + '"][data-i="' + i + '"]').forEach(function (n) {
+                    n.classList.toggle('is-on', on);
+                });
+            });
+        });
+
+        document.getElementById('k-ht').textContent = fmt(ht);
+        document.getElementById('k-ttc').textContent = fmt(ttc);
+        document.getElementById('k-tva').textContent = 'Total TVA : ' + fmt(tva);
+        document.getElementById('nav-total').textContent = fmt(ht);
+        document.getElementById('k-bar-total').textContent = 'TOTAL HT : ' + fmt(ht);
+        document.getElementById('r-sous').textContent = fmt(sous);
+        document.getElementById('r-hon').textContent = fmt(hon);
+        document.getElementById('r-ht').textContent = fmt(ht);
+        document.getElementById('r-tva').textContent = fmt(tva);
+        document.getElementById('r-ttcb').textContent = fmt(ttc);
+        document.getElementById('r-ttc').textContent = fmt(ttc);
+
+        var parts = D.cats.map(function (c) { return [c, byCat[c] || 0, D.colors[c]]; });
+        parts.push(['Honoraires', hon, '#475569']);
+        var bar = '', leg = '';
+        parts.forEach(function (p) {
+            if (p[1] <= 0) return;
+            var pct = ht ? p[1] / ht * 100 : 0;
+            bar += '<span style="width:' + pct.toFixed(1) + '%;background:' + p[2] + '"></span>';
+            leg += '<div class="legend-item"><span class="legend-label">' +
+                '<span class="legend-dot" style="background:' + p[2] + '"></span>' + p[0] + '</span>' +
+                '<span class="legend-value">' + fmt(p[1]) + '</span>' +
+                (p[0] === 'Honoraires' ? '' :
+                    '<span class="legend-percent">' + pct.toFixed(1).replace('.', ',') + '%</span>') + '</div>';
+        });
+        document.getElementById('k-bar').innerHTML = bar;
+        document.getElementById('k-legend').innerHTML = leg;
+    }
+    document.querySelectorAll('.pick input').forEach(function (i) { i.addEventListener('change', render); });
+    render();
+    </script>
+</body>
+
+</html>
